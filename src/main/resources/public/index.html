@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #15202B;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #192734;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #22303C;
+            color: #fff;
+            box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+        }
+        input[type="button"] {
+            background-color: #1da1f2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            display: block;
+            margin-top: 20px;
+            width: 100%;
+        }
+        #tweetList {
+            list-style: none;
+            padding: 0;
+        }
+        .tweet {
+            border: 1px solid #1DA1F2;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #1A1A1A;
+            transition: transform 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>TWITTER</h1>
+    <label for="content">Nuevo Tweet:</label>
+    <input type="text" id="content" name="content" placeholder="Escribe tu tweet aquí">
+
+    <input type="button" value="Publicar Tweet" onclick="loadPostMsg()">
+
+    <ul id="tweetList"></ul>
+</div>
+
+<script>
+    function loadPostMsg() {
+        const content = document.getElementById('content').value;
+        const url = "http://localhost:8080/service/post/addPost";
+        const post = localStorage.getItem('username') + "," + content;
+
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify({ content: post }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud');
+            }
+            return response.json();
+        })
+        .then(data => {
+            getAllPosts();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const tweetList = document.getElementById('tweetList');
+            tweetList.innerHTML = '<li>Error al procesar la solicitud</li>';
+        });
+    }
+
+    function getAllPosts() {
+        fetch("http://localhost:8080/service/thread/all-posts", {
+            method: 'GET'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tweetList = document.getElementById('tweetList');
+            tweetList.innerHTML = ''; // Limpiar la lista antes de agregar nuevos tweets
+            Object.values(data).reverse().forEach(tweet => {
+                const li = document.createElement('li');
+                li.classList.add('tweet');
+                li.textContent = tweet.content;
+                tweetList.appendChild(li);
+
+                // Aplicar una animación de desplazamiento al agregar un nuevo tweet
+                setTimeout(() => {
+                    li.style.transform = 'translateY(0)';
+                }, 10);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const tweetList = document.getElementById('tweetList');
+            tweetList.innerHTML = '<li>Error al procesar la solicitud</li>';
+        });
+    }
+
+    // Cargar todos los tweets al cargar la página
+    getAllPosts();
+</script>
+</body>
+</html>

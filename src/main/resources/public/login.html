@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitter - Inicio de Sesión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #15202B;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #192734;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 20px;
+            width: 300px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #22303C;
+            color: #fff;
+            box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+        }
+        input[type="button"] {
+            background-color: #1da1f2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .error-message {
+            color: #ff6347;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenido, ingresa tu nombre de usuario</h1>
+        <form id="loginForm">
+            <label for="user">Usuario:</label><br>
+            <input type="text" id="user" name="user" placeholder="Ingresa tu usuario" required><br>
+            <span class="error-message" id="errorMessage"></span><br>
+            <input type="button" value="Ingresar" onclick="saveUsername()">
+        </form>
+    </div>
+
+    <script>
+        function saveUsername() {
+            const usernameInput = document.getElementById('user');
+            const errorMessage = document.getElementById('errorMessage');
+            const username = usernameInput.value.trim();
+
+            if (username === "") {
+                errorMessage.textContent = "Por favor, ingresa un nombre de usuario";
+                return;
+            }
+
+            localStorage.setItem('username', username);
+            window.location.href = "http://localhost:8080/twitter/"; // Redirige a la página principal
+        }
+    </script>
+</body>
+</html>
+
