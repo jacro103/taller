@@ -81,6 +81,7 @@
         const content = document.getElementById('content').value;
         const url = "http://localhost:8080/service/post/addPost";
         const post = localStorage.getItem('username') + "," + content;
+        console.log(post);
 
         fetch(url, {
             method: 'POST',

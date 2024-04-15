@@ -13,6 +13,10 @@ public class Post {
         this.username = username;
     }
 
+    public static String prueba(String mensajeprueba){
+        return mensajeprueba;
+    }
+
     public String getId() {
         return id;
     }
